@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Steve T. M. Yeung (楊達文) | REC Engineering Company Limited</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            rec: {
+              burgundy: '#6E2C2A',
+              burgundyDark: '#54201E',
+              green: '#4E6B38',
+              greenLight: '#EEF3EA',
+              stone: '#F5F4F0'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'PingFang HK', 'Microsoft JhengHei', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      background-color: #F5F4F0;
+      font-family: 'Inter', 'PingFang HK', 'Microsoft JhengHei', sans-serif;
+    }
+    .rec-gradient {
+      background: linear-gradient(135deg, #6E2C2A 0%, #54201E 62%, #4E6B38 100%);
+    }
+    .qr-shadow {
+      box-shadow: 0 10px 30px -10px rgba(110, 44, 42, 0.22);
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-800 antialiased pb-12">
+
+  <!-- Top Brand Header -->
+  <header class="rec-gradient text-white shadow-md">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <!-- Geometric REC-inspired Monogram -->
+        <svg class="w-10 h-10 shrink-0 rounded-lg bg-white/95 p-1.5 shadow-sm" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <path d="M12 14h24c8 0 14 5 14 13 0 6-4 11-10 12l10 13H38L29 40H22v12H12V14zm10 9v9h13c3.5 0 5.5-1.8 5.5-4.5S38.5 23 35 23H22z" fill="#6E2C2A"/>
+          <path d="M12 46h40v6H12z" fill="#4E6B38"/>
+        </svg>
+        <div class="min-w-0">
+          <p class="text-sm sm:text-base font-bold tracking-tight truncate">盈電工程有限公司</p>
+          <p class="text-xs text-white/85 truncate">REC Engineering Company Limited</p>
+        </div>
+      </div>
+      <button id="langToggle" type="button" class="shrink-0 px-3 py-1.5 rounded-full bg-white/15 hover:bg-white/25 border border-white/25 text-xs font-semibold tracking-wide transition">
+        EN / 繁
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Card Container -->
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 -mt-3">
+    <section class="bg-white rounded-2xl shadow-lg border border-slate-200/80 overflow-hidden mt-6">
+      <!-- Profile & QR Hero -->
+      <div class="p-6 sm:p-8 grid grid-cols-1 md:grid-cols-12 gap-6 items-center border-b border-slate-100">
+        <!-- Left: Person Info -->
+        <div class="md:col-span-7 space-y-4">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rec-greenLight text-rec-green text-xs font-semibold">
+            <span class="w-2 h-2 rounded-full bg-rec-green"></span>
+            <span data-i18n="subsidiary">有利集團全資附屬公司 · Yau Lee Holdings Limited</span>
+          </div>
+
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+              Steve T. M. Yeung <span class="text-rec-burgundy font-bold">楊達文</span>
+            </h1>
+            <p class="text-sm font-medium text-slate-500 mt-1">BEng, MSc (Const. Law)</p>
+            <p class="text-base sm:text-lg font-semibold text-rec-burgundy mt-2" data-i18n="roleTitle">
+              高級經理 · Senior Manager
+            </p>
+            <p class="text-xs sm:text-sm text-slate-600 mt-1" data-i18n="hkecaBadge">
+              兼任：香港電器工程商會 理事 (2025–2027)
+            </p>
+          </div>
+
+          <!-- Primary Action Buttons -->
+          <div class="flex flex-wrap gap-2.5 pt-1">
+            <button id="downloadVcfBtn" type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-rec-burgundy hover:bg-rec-burgundyDark text-white text-sm font-semibold shadow-sm transition">
+              <i data-lucide="user-plus" class="w-4 h-4"></i>
+              <span data-i18n="saveVcf">儲存聯絡人 (.vcf)</span>
+            </button>
+            <button id="enlargeQrBtn" type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-rec-greenLight hover:bg-[#e1ebd9] text-rec-green text-sm font-semibold transition">
+              <i data-lucide="maximize-2" class="w-4 h-4"></i>
+              <span data-i18n="enlargeQr">放大二維碼</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right: Scannable QR Code -->
+        <div class="md:col-span-5 flex flex-col items-center">
+          <div class="bg-white p-3.5 rounded-2xl border-2 border-rec-burgundy/15 qr-shadow">
+            <img
+              id="qrImage"
+              src="data:image/png;base64,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n6cL+GqtVfKcvXfJWCfPqVI1986xqtb5ROd+2Yu/f860ejp17mnnOp+o6o233uHT9quzns69mGZaP0+r58Y7vLOfp52daXO/8Y6a1mMnfGkEAAAgEhoBAACIhEYAAAAioREAAIBIaAQAACASGgEAAIiERgAAACKhEQAAgEhoBAAAIBIaAQAAiIRGAAAAos/TBUy31nq6hP+YVk+nvffTJfy2zv06GetkDaf1WFXNnc/ppMf+3rQ1vHGsEzeerypVe/GT17Dqbnnr+2JaPVU69+ut77gqvjQCAAAQCY0AAABEQiMAAACR0AgAAEAkNAIAABAJjQAAAERCIwAAAJHQCAAAQCQ0AgAAEAmNAAAAREIjAAAA0dp7P10DF1trtY110qtV9VSdi5N6Osc6ceM6n6jai2lz75zXtPV56/k60Xn3VpnWh54zx433YaeffPdWmXaH38iXRgAAACKhEQAAgEhoBAAAIBIaAQAAiIRGAAAAIqERAACASGgEAAAgEhoBAACIhEYAAAAioREAAIBIaAQAACBae++na3jMWqvkOSdreDLWtOec6BzrRGc/V+1F1VhVfnL/VJnWh50677EbTTvLJ6btV+f9c2La+72Ku6VnrGn7XmXa/9UqP3lPfWkEAAAgEhoBAACIhEYAAAAioREAAIBIaAQAACASGgEAAIiERgAAACKhEQAAgEhoBAAAIBIaAQAAiIRGAAAAos/TBXy11moba+/97W9O6jn5zclYb1U1987eqBqrqjeqerXTtJ7vXMMb9+LGuVedr2nPOdH5bursn2n3xrSzfOM6/+Q97bxbbuT/8118aQQAACASGgEAAIiERgAAACKhEQAAgEhoBAAAIBIaAQAAiIRGAAAAIqERAACASGgEAAAgEhoBAACIhEYAAACitfd+uoYfYa317W869+KknhNVNU9bnxtVrWHnXlT1YZUbz+CJt87rxLR7o/OcduqsedpYVabt6Ykb3yn29Gea9r9l2rvphC+NAAAAREIjAAAAkdAIAABAJDQCAAAQCY0AAABEQiMAAACR0AgAAEAkNAIAABAJjQAAAERCIwAAAJHQCAAAQLT23k/X8Ji1VttYVet8UnPnWFVOaq6a+7TnnHhrzVWmzb1T5zpXqdqvKjee0ypv7fmf/C440bnvN95RVd7ah9PcOPcba/alEQAAgEhoBAAAIBIaAQAAiIRGAAAAIqERAACASGgEAAAgEhoBAACIhEYAAAAioREAAIBIaAQAACASGgEAAIg+TxfwJ9ZaJc/Ze7eNNa3mk+ecqKqnqubO/apaw86xqtxYc+fZmXYGT3TeUdP85H6uMq1/Ouf+1ndBVT3Tzk5nb9zorWd52v/wG/nSCAAAQCQ0AgAAEAmNAAAAREIjAAAAkdAIAABAJDQCAAAQCY0AAABEQiMAAACR0AgAAEAkNAIAABAJjQAAAESfpwv4aq31yrH23t/+5qSek9+cjHWiqubOsTprPjFtrBvXp6qfO+dVpfN8TbujfvK+d57Tzv268X0xzY3/WzrPcufdcmJaH974P+FGN94tJ3xpBAAAIBIaAQAAiIRGAAAAIqERAACASGgEAAAgEhoBAACIhEYAAAAioREAAIBIaAQAACASGgEAAIiERgAAAKLP0wX8ib330yX8trXWt785mdfJc6rGOlFVc9VYnc+pmlfVWDfuRZXOnj9x41509vOJaXtapXOdO9enc7+m3YcnTuqpqnnauZhW87R9PzFtDae946bdCdP2q4ovjQAAAERCIwAAAJHQCAAAQCQ0AgAAEAmNAAAAREIjAAAAkdAIAABAJDQCAAAQCY0AAABEQiMAAACR0AgAAED0ebqAP7HW+vY3e++GSv7PtHp+sqq9OHlOlZ/cG1V7MW1Pq3SuT+cadu7pTz5fnevT2T/T7o2qNZw2VpXOHqty4zrfuKdVptXzVr40AgAAEAmNAAAAREIjAAAAkdAIAABAJDQCAAAQCY0AAABEQiMAAACR0AgAAEAkNAIAABAJjQAAAERCIwAAANHaez9dw2PWWk+XcL2T/rlxnTvPRdX6VNV8435N03kuOvf9xh6bVvO03rhxrGneegan/T+cVvNb9+ut57TKtHu1ky+NAAAAREIjAAAAkdAIAABAJDQCAAAQCY0AAABEQiMAAACR0AgAAEAkNAIAABAJjQAAAERCIwAAAJHQCAAAQPR5uoB/Za3VNtbeu22sk3md1FP1nCqdNZ8858Z1vrHnp/Vh1Rp29s+JaevcOdZbvXW/3nreO3XWc+NdV+XGe6xqfab9/znRWc+NvXHCl0YAAAAioREAAIBIaAQAACASGgEAAIiERgAAACKhEQAAgEhoBAAAIBIaAQAAiIRGAAAAIqERAACASGgEAAAg+jxdwJ9Ya5U8Z+/dNtbJc07quVHVOneuz417UVVzZ89X6eyfznW+8exMq6dK1V68dd87TZv7tLt32h01zbT96nTjfk3rw598h/vSCAAAQCQ0AgAAEAmNAAAAREIjAAAAkdAIAABAJDQCAAAQCY0AAABEQiMAAACR0AgAAEAkNAIAABAJjQAAAESfpwv4aq317W/23iXP6XRSc5XONezci6p6qkxbnxMn9VStYefcp+37tLGm3QmdfvLcT0y7o050rvO0sab14U/ujSpV+z7tv8SNY52YVk8nXxoBAACIhEYAAAAioREAAIBIaAQAACASGgEAAIiERgAAACKhEQAAgEhoBAAAIBIaAQAAiIRGAAAAIqERAACAaO29n67hP9ZaJc85mVfVWG/V2Rsne1FVT2eP/WRvPV837nvnXlTdvdPu8Gn77l3Z48Z+nvbu7vTWuU+7f05M640T/mf+mi+NAAAAREIjAAAAkdAIAABAJDQCAAAQCY0AAABEQiMAAACR0AgAAEAkNAIAABAJjQAAAERCIwAAAJHQCAAAQLT23k/X8B9rrbaxquZ+UnPnOk9bQ+vza531nHjrndB53qvcuBfT7tXO55x4ax9O268T0+7et5rWP9O8dV7T3Hj/TPsP4EsjAAAAkdAIAABAJDQCAAAQCY0AAABEQiMAAACR0AgAAEAkNAIAABAJjQAAAERCIwAAAJHQCAAAQCQ0AgAAEK2999M1/Mda6+kS/qNqfU7mZaweN9ZcZdr5mmbauajar7eOdeLGPZ12/0yredpe/OR37o31VHHX3fWcE9P+I017F/jSCAAAQCQ0AgAAEAmNAAAAREIjAAAAkdAIAABAJDQCAAAQCY0AAABEQiMAAACR0AgAAEAkNAIAABAJjQAAAESfpwv4au/97W/WWj92rJPnTFO1hidO1qdqDTvnVWVaz3ea1oedz+mc+43rPM20M9j5/up8zonO9/K0d8qN9XTuxY09X/Uf6cb/q9P6Z9r6nPClEQAAgEhoBAAAIBIaAQAAiIRGAAAAIqERAACASGgEAAAgEhoBAACIhEYAAAAioREAAIBIaAQAACASGgEAAIjW3vvpGv6JtVbJc6rW56SeG/di2jqfqNqLzj39yf0zbS+qdM79rW7cU35t2nnvfMf95PdplWn7NW3unfOa1s+d9/ON/XPCl0YAAAAioREAAIBIaAQAACASGgEAAIiE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AIiERgAAACKhEQAAgEhoBAAAIBIaAQAAiIRGAAAAIqERAACASGgEAAAgEhoBAACIhEYAAAAioREAAIBo7b2fruGfWGt9+5uquZ+MdWJaPSdOau5cn865V+k8gzeuT5Ubz9eJaXd4591bZdodNa1XzavnOSfeuhc3mtY/03rjxLT/q1WmrXMVXxoBAACIhEYAAAAioREAAIBIaAQAACASGgEAAIiERgAAACKhEQAAgEhoBAAAIBIaAQAAiIRGAAAAIqERAACA6PN0AV+ttb79zd675DedTuqpmvuJqnpOftOpal5Vqvar81x09mHVWFV7WvWcznWetoY39kbnfejd9PemrWGVt951J258L3eadk7f+l+9sw+n3asnfGkEAAAgEhoBAACIhEYAAAAioREAAIBIaAQAACASGgEAAIiERgAAACKhEQAAgEhoBAAAIBIaAQAAiIRGAAAAorX3frqG/1hrlTznZF4nY1U958SNY1X1T+e8Try1N6bVfGLavOjR+W7q7I1p79wq087Xjes87Z1741gnbqxnmmnnq/N/wrS5d/KlEQAAgEhoBAAAIBIaAQAAiIRGAAAAIqERAACASGgEAAAgEhoBAACIhEYAAAAioREAAIBIaAQAACASGgEAAIg+TxfwJ/bebc9Za71yrBtVrWHV+lTt17Sxqkzbi85z0blf0+6Wqr3o3NO3zuvEW98709b5Rm+9N05M658b7/mqsaY9Z1pvdPKlEQAAgEhoBAAAIBIaAQAAiIRGAAAAIqERAACASGgEAAAgEhoBAACIhEYAAAAioREAAIBIaAQAACASGgEAAIjW3vvpGn7bWuvpEv7jZA2raq7ar841rFqfab06rebOHruxf6rGOnFjb0w7pzeu4Ylpd/i0fb9R5/l6q2nnosq0O+qt9Uzb9yrT7lVfGgEAAIiERgAAACKhEQAAgEhoBAAAIBIaAQAAiIRGAAAAIqERAACASGgEAAAgEhoBAACIhEYAAAAioREAAIDo83QBX621ni7hn9h7f/ubzrlX1XPynBNVz/nJa3hiWs03nveq9ZnWq9N0ruHJWJ1rOO0MThtr2r1a5a3rfOM9f+LGuU+7MzvrmXbX3ciXRgAAACKhEQAAgEhoBAAAIBIaAQAAiIRGAAAAIqERAACASGgEAAAgEhoBAACIhEYAAAAioREAAIBIaAQAACBae++n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"
+              alt="Steve T. M. Yeung Contact QR Code"
+              class="w-48 h-48 sm:w-52 sm:h-52 object-contain mx-auto select-none"
+            />
+          </div>
+          <p class="text-xs font-medium text-slate-500 mt-3 text-center flex items-center gap-1.5">
+            <i data-lucide="scan-line" class="w-3.5 h-3.5 text-rec-green"></i>
+            <span data-i18n="scanPrompt">請用手機相機掃描儲存聯絡資料</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="flex border-b border-slate-200 bg-slate-50/70 px-4 sm:px-8 gap-2 overflow-x-auto" role="tablist">
+        <button type="button" data-tab="contact" class="tab-btn py-3.5 px-3 text-sm font-semibold border-b-2 border-rec-burgundy text-rec-burgundy whitespace-nowrap transition" data-i18n="tabContact">
+          聯絡資料
+        </button>
+        <button type="button" data-tab="company" class="tab-btn py-3.5 px-3 text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap transition" data-i18n="tabCompany">
+          關於盈電工程
+        </button>
+        <button type="button" data-tab="hkeca" class="tab-btn py-3.5 px-3 text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap transition" data-i18n="tabHkeca">
+          商會職務
+        </button>
+      </div>
+
+      <!-- Tab Panel 1: Contact Details -->
+      <div id="panel-contact" class="tab-panel p-6 sm:p-8 space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <!-- Mobile -->
+          <div class="flex items-center justify-between p-3.5 rounded-xl border border-slate-200 hover:border-rec-burgundy/40 transition bg-white">
+            <a href="tel:+85293613787" class="flex items-center gap-3 min-w-0 flex-1">
+              <div class="w-10 h-10 rounded-lg bg-rec-burgundy/10 text-rec-burgundy flex items-center justify-center shrink-0">
+                <i data-lucide="smartphone" class="w-5 h-5"></i>
+              </div>
+              <div class="min-w-0">
+                <p class="text-xs text-slate-500" data-i18n="lblMobile">手提電話 Mobile</p>
+                <p class="text-sm font-semibold text-slate-900 truncate">+852 9361 3787</p>
+              </div>
+            </a>
+            <button type="button" data-copy="+85293613787" class="copy-btn p-2 text-slate-400 hover:text-rec-burgundy rounded-lg hover:bg-slate-100 transition" aria-label="Copy Mobile">
+              <i data-lucide="copy" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <!-- Direct -->
+          <div class="flex items-center justify-between p-3.5 rounded-xl border border-slate-200 hover:border-rec-burgundy/40 transition bg-white">
+            <a href="tel:+85226198357" class="flex items-center gap-3 min-w-0 flex-1">
+              <div class="w-10 h-10 rounded-lg bg-rec-greenLight text-rec-green flex items-center justify-center shrink-0">
+                <i data-lucide="phone-call" class="w-5 h-5"></i>
+              </div>
+              <div class="min-w-0">
+                <p class="text-xs text-slate-500" data-i18n="lblDirect">直線電話 Direct</p>
+                <p class="text-sm font-semibold text-slate-900 truncate">+852 2619 8357</p>
+              </div>
+            </a>
+            <button type="button" data-copy="+85226198357" class="copy-btn p-2 text-slate-400 hover:text-rec-burgundy rounded-lg hover:bg-slate-100 transition" aria-label="Copy Direct">
+              <i data-lucide="copy" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <!-- Office -->
+          <div class="flex items-center justify-between p-3.5 rounded-xl border border-slate-200 hover:border-rec-burgundy/40 transition bg-white">
+            <a href="tel:+85226198888" class="flex items-center gap-3 min-w-0 flex-1">
+              <div class="w-10 h-10 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center shrink-0">
+                <i data-lucide="building-2" class="w-5 h-5"></i>
+              </div>
+              <div class="min-w-0">
+                <p class="text-xs text-slate-500" data-i18n="lblOffice">公司總機 Tel</p>
+                <p class="text-sm font-semibold text-slate-900 truncate">+852 2619 8888</p>
+              </div>
+            </a>
+            <button type="button" data-copy="+85226198888" class="copy-btn p-2 text-slate-400 hover:text-rec-burgundy rounded-lg hover:bg-slate-100 transition" aria-label="Copy Office">
+              <i data-lucide="copy" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <!-- Fax -->
+          <div class="flex items-center justify-between p-3.5 rounded-xl border border-slate-200 bg-white">
+            <div class="flex items-center gap-3 min-w-0 flex-1">
+              <div class="w-10 h-10 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center shrink-0">
+                <i data-lucide="printer" class="w-5 h-5"></i>
+              </div>
+              <div class="min-w-0">
+                <p class="text-xs text-slate-500" data-i18n="lblFax">傳真 Fax</p>
+                <p class="text-sm font-semibold text-slate-900 truncate">+852 2481 0623</p>
+              </div>
+            </div>
+            <button type="button" data-copy="+85224810623" class="copy-btn p-2 text-slate-400 hover:text-rec-burgundy rounded-lg hover:bg-slate-100 transition" aria-label="Copy Fax">
+              <i data-lucide="copy" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <!-- Email -->
+          <div class="flex items-center justify-between p-3.5 rounded-xl border border-slate-200 hover:border-rec-burgundy/40 transition bg-white">
+            <a href="mailto:steveyeung@rec-eng.com" class="flex items-center gap-3 min-w-0 flex-1">
+              <div class="w-10 h-10 rounded-lg bg-rec-burgundy/10 text-rec-burgundy flex items-center justify-center shrink-0">
+                <i data-lucide="mail" class="w-5 h-5"></i>
+              </div>
+              <div class="min-w-0">
+                <p class="text-xs text-slate-500" data-i18n="lblEmail">電郵 Email</p>
+                <p class="text-sm font-semibold text-slate-900 truncate">steveyeung@rec-eng.com</p>
+              </div>
+            </a>
+            <button type="button" data-copy="steveyeung@rec-eng.com" class="copy-btn p-2 text-slate-400 hover:text-rec-burgundy rounded-lg hover:bg-slate-100 transition" aria-label="Copy Email">
+              <i data-lucide="copy" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <!-- Website -->
+          <div class="flex items-center justify-between p-3.5 rounded-xl border border-slate-200 hover:border-rec-burgundy/40 transition bg-white">
+            <a href="https://www.rec-eng.com" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 min-w-0 flex-1">
+              <div class="w-10 h-10 rounded-lg bg-rec-greenLight text-rec-green flex items-center justify-center shrink-0">
+                <i data-lucide="globe" class="w-5 h-5"></i>
+              </div>
+              <div class="min-w-0">
+                <p class="text-xs text-slate-500" data-i18n="lblWeb">公司網站 Website</p>
+                <p class="text-sm font-semibold text-slate-900 truncate">www.rec-eng.com</p>
+              </div>
+            </a>
+            <button type="button" data-copy="https://www.rec-eng.com" class="copy-btn p-2 text-slate-400 hover:text-rec-burgundy rounded-lg hover:bg-slate-100 transition" aria-label="Copy Website">
+              <i data-lucide="copy" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Office Address -->
+        <div class="flex items-start justify-between gap-3 p-4 rounded-xl border border-slate-200 bg-slate-50/70">
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-lg bg-white border border-slate-200 text-rec-burgundy flex items-center justify-center shrink-0 mt-0.5">
+              <i data-lucide="map-pin" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500" data-i18n="lblAddress">辦事處地址 Office Address</p>
+              <p class="text-sm font-medium text-slate-800 mt-0.5 leading-relaxed">
+                Units A-D, 15/F, Goodman Kwai Chung Logistics Centre,<br class="hidden sm:inline" />
+                585-609 Castle Peak Road, Kwai Chung, New Territories, Hong Kong
+              </p>
+            </div>
+          </div>
+          <button type="button" data-copy="Units A-D, 15/F, Goodman Kwai Chung Logistics Centre, 585-609 Castle Peak Road, Kwai Chung, New Territories, Hong Kong" class="copy-btn p-2 text-slate-400 hover:text-rec-burgundy rounded-lg hover:bg-white transition shrink-0" aria-label="Copy Address">
+            <i data-lucide="copy" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab Panel 2: Company Profile (REC Engineering) -->
+      <div id="panel-company" class="tab-panel hidden p-6 sm:p-8 space-y-6">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900" data-i18n="compHeading">盈電工程有限公司 (REC Engineering Company Limited)</h2>
+          <p class="text-sm text-slate-600 mt-2 leading-relaxed" data-i18n="compDesc">
+            香港最大型機電工程公司之一，擁有超過 55 年專業經驗，專注環保、電氣及機械工程項目，業務涵蓋香港、澳門及中國內地，服務包括鐵路系統、醫院、酒店及發電廠等大型基建。
+          </p>
+        </div>
+
+        <!-- Stats Row (Grounded from rec-eng.com) -->
+        <div class="grid grid-cols-3 gap-3">
+          <div class="p-4 rounded-xl bg-rec-stone border border-slate-200/70 text-center">
+            <p class="text-2xl sm:text-3xl font-bold text-rec-burgundy">55</p>
+            <p class="text-xs font-medium text-slate-600 mt-1" data-i18n="statYears">年卓越經驗</p>
+          </div>
+          <div class="p-4 rounded-xl bg-rec-stone border border-slate-200/70 text-center">
+            <p class="text-2xl sm:text-3xl font-bold text-rec-green">73+</p>
+            <p class="text-xs font-medium text-slate-600 mt-1" data-i18n="statProj">已完成項目</p>
+          </div>
+          <div class="p-4 rounded-xl bg-rec-stone border border-slate-200/70 text-center">
+            <p class="text-2xl sm:text-3xl font-bold text-rec-burgundy">1,500+</p>
+            <p class="text-xs font-medium text-slate-600 mt-1" data-i18n="statStaff">專業團隊員工</p>
+          </div>
+        </div>
+
+        <!-- Core Services -->
+        <div>
+          <h3 class="text-sm font-semibold text-slate-800 mb-3" data-i18n="servicesTitle">核心工程服務範疇</h3>
+          <div class="flex flex-wrap gap-2" id="servicesList">
+            <span class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-medium">Electrical Installation</span>
+            <span class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-medium">HVAC</span>
+            <span class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-medium">Fire Services, Plumbing &amp; Drainage</span>
+            <span class="px-3 py-1.5 rounded-lg bg-rec-greenLight text-rec-green text-xs font-medium">MiMEP Services</span>
+            <span class="px-3 py-1.5 rounded-lg bg-rec-greenLight text-rec-green text-xs font-medium">AI, IoT &amp; Green Solutions</span>
+            <span class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-medium">Design &amp; Build / O&amp;M</span>
+          </div>
+        </div>
+
+        <div class="pt-1">
+          <a href="https://www.rec-eng.com" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm font-semibold text-rec-burgundy hover:underline">
+            <span data-i18n="visitRec">瀏覽公司官方網站 www.rec-eng.com</span>
+            <i data-lucide="external-link" class="w-4 h-4"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Tab Panel 3: HKECA Affiliation -->
+      <div id="panel-hkeca" class="tab-panel hidden p-6 sm:p-8 space-y-5">
+        <div class="flex items-start justify-between gap-4 flex-wrap">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-rec-green" data-i18n="hkecaSub">商會職務 · Association Role</p>
+            <h2 class="text-lg font-bold text-slate-900 mt-1">香港電器工程商會 · Hong Kong Electrical Contractors' Association</h2>
+            <p class="text-sm font-semibold text-rec-burgundy mt-1" data-i18n="hkecaRole">理事 · Executive Committee Member (2025–2027)</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div class="flex items-center justify-between p-3.5 rounded-xl border border-slate-200 bg-white">
+            <a href="tel:+85225720843" class="flex items-center gap-3 min-w-0 flex-1">
+              <div class="w-9 h-9 rounded-lg bg-rec-greenLight text-rec-green flex items-center justify-center shrink-0">
+                <i data-lucide="phone" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <p class="text-xs text-slate-500">電話 Tel</p>
+                <p class="text-sm font-semibold text-slate-900">+852 2572 0843</p>
+              </div>
+            </a>
+            <button type="button" data-copy="+85225720843" class="copy-btn p-2 text-slate-400 hover:text-rec-burgundy rounded-lg hover:bg-slate-100 transition" aria-label="Copy HKECA Tel">
+              <i data-lucide="copy" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between p-3.5 rounded-xl border border-slate-200 bg-white">
+            <div class="flex items-center gap-3 min-w-0 flex-1">
+              <div class="w-9 h-9 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center shrink-0">
+                <i data-lucide="printer" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <p class="text-xs text-slate-500">傳真 Fax</p>
+                <p class="text-sm font-semibold text-slate-900">+852 2838 2532</p>
+              </div>
+            </div>
+            <button type="button" data-copy="+85228382532" class="copy-btn p-2 text-slate-400 hover:text-rec-burgundy rounded-lg hover:bg-slate-100 transition" aria-label="Copy HKECA Fax">
+              <i data-lucide="copy" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between p-3.5 rounded-xl border border-slate-200 bg-white">
+            <a href="mailto:adm@hkeca.org" class="flex items-center gap-3 min-w-0 flex-1">
+              <div class="w-9 h-9 rounded-lg bg-rec-burgundy/10 text-rec-burgundy flex items-center justify-center shrink-0">
+                <i data-lucide="mail" class="w-4 h-4"></i>
+              </div>
+              <div class="min-w-0">
+                <p class="text-xs text-slate-500">電郵 Email</p>
+                <p class="text-sm font-semibold text-slate-900 truncate">adm@hkeca.org</p>
+              </div>
+            </a>
+            <button type="button" data-copy="adm@hkeca.org" class="copy-btn p-2 text-slate-400 hover:text-rec-burgundy rounded-lg hover:bg-slate-100 transition" aria-label="Copy HKECA Email">
+              <i data-lucide="copy" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between p-3.5 rounded-xl border border-slate-200 bg-white">
+            <a href="https://www.hkeca.org" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 min-w-0 flex-1">
+              <div class="w-9 h-9 rounded-lg bg-rec-greenLight text-rec-green flex items-center justify-center shrink-0">
+                <i data-lucide="globe" class="w-4 h-4"></i>
+              </div>
+              <div class="min-w-0">
+                <p class="text-xs text-slate-500">網址 Website</p>
+                <p class="text-sm font-semibold text-slate-900 truncate">www.hkeca.org</p>
+              </div>
+            </a>
+            <button type="button" data-copy="https://www.hkeca.org" class="copy-btn p-2 text-slate-400 hover:text-rec-burgundy rounded-lg hover:bg-slate-100 transition" aria-label="Copy HKECA Website">
+              <i data-lucide="copy" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/70">
+          <p class="text-xs text-slate-500" data-i18n="hkecaAddrLbl">商會地址 Address</p>
+          <p class="text-sm font-medium text-slate-800 mt-1">
+            香港灣仔譚臣道一一四號廣亞大樓八字樓<br />
+            8/F, Kwong Ah Building, 114 Thomson Road, Wanchai, Hong Kong
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="text-center text-xs text-slate-500 mt-6">
+      © 2026 REC Engineering Company Limited · Steve T. M. Yeung
+    </footer>
+  </main>
+
+  <!-- Full-Screen QR Modal -->
+  <div id="qrModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/75 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl relative">
+      <button id="closeModalBtn" type="button" class="absolute top-4 right-4 p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition" aria-label="Close">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+      <p class="text-xs font-semibold uppercase tracking-wider text-rec-burgundy">REC Engineering Co. Ltd.</p>
+      <h3 class="text-lg font-bold text-slate-900 mt-1">Steve T. M. Yeung · 楊達文</h3>
+      <div class="mt-4 bg-white p-3 rounded-2xl border border-slate-200 inline-block">
+        <img
+          src="data:image/png;base64,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n6cL+GqtVfKcvXfJWCfPqVI1986xqtb5ROd+2Yu/f860ejp17mnnOp+o6o233uHT9quzns69mGZaP0+r58Y7vLOfp52daXO/8Y6a1mMnfGkEAAAgEhoBAACIhEYAAAAioREAAIBIaAQAACASGgEAAIiERgAAACKhEQAAgEhoBAAAIBIaAQAAiIRGAAAAos/TBUy31nq6hP+YVk+nvffTJfy2zv06GetkDaf1WFXNnc/ppMf+3rQ1vHGsEzeerypVe/GT17Dqbnnr+2JaPVU69+ut77gqvjQCAAAQCY0AAABEQiMAAACR0AgAAEAkNAIAABAJjQAAAERCIwAAAJHQCAAAQCQ0AgAAEAmNAAAAREIjAAAA0dp7P10DF1trtY110qtV9VSdi5N6Osc6ceM6n6jai2lz75zXtPV56/k60Xn3VpnWh54zx433YaeffPdWmXaH38iXRgAAACKhEQAAgEhoBAAAIBIaAQAAiIRGAAAAIqERAACASGgEAAAgEhoBAACIhEYAAAAioREAAIBIaAQAACBae++na3jMWqvkOSdreDLWtOec6BzrRGc/V+1F1VhVfnL/VJnWh50677EbTTvLJ6btV+f9c2La+72Ku6VnrGn7XmXa/9UqP3lPfWkEAAAgEhoBAACIhEYAAAAioREAAIBIaAQAACASGgEAAIiERgAAACKhEQAAgEhoBAAAIBIaAQAAiIRGAAAAos/TBXy11moba+/97W9O6jn5zclYb1U1987eqBqrqjeqerXTtJ7vXMMb9+LGuVedr2nPOdH5bursn2n3xrSzfOM6/+Q97bxbbuT/8118aQQAACASGgEAAIiERgAAACKhEQAAgEhoBAAAIBIaAQAAiIRGAAAAIqERAACASGgEAAAgEhoBAACIhEYAAACitfd+uoYfYa317W869+KknhNVNU9bnxtVrWHnXlT1YZUbz+CJt87rxLR7o/OcduqsedpYVabt6Ykb3yn29Gea9r9l2rvphC+NAAAAREIjAAAAkdAIAABAJDQCAAAQCY0AAABEQiMAAACR0AgAAEAkNAIAABAJjQAAAERCIwAAAJHQCAAAQLT23k/X8Ji1VttYVet8UnPnWFVOaq6a+7TnnHhrzVWmzb1T5zpXqdqvKjee0ypv7fmf/C440bnvN95RVd7ah9PcOPcba/alEQAAgEhoBAAAIBIaAQAAiIRGAAAAIqERAACASGgEAAAgEhoBAACIhEYAAAAioREAAIBIaAQAACASGgEAAIg+TxfwJ9ZaJc/Ze7eNNa3mk+ecqKqnqubO/apaw86xqtxYc+fZmXYGT3TeUdP85H6uMq1/Ouf+1ndBVT3Tzk5nb9zorWd52v/wG/nSCAAAQCQ0AgAAEAmNAAAAREIjAAAAkdAIAABAJDQCAAAQCY0AAABEQiMAAACR0AgAAEAkNAIAABAJjQAAAESfpwv4aq31yrH23t/+5qSek9+cjHWiqubOsTprPjFtrBvXp6qfO+dVpfN8TbujfvK+d57Tzv268X0xzY3/WzrPcufdcmJaH974P+FGN94tJ3xpBAAAIBIaAQAAiIRGAAAAIqERAACASGgEAAAgEhoBAACIhEYAAAAioREAAIBIaAQAACASGgEAAIiERgAAAKLP0wX8ib330yX8trXWt785mdfJc6rGOlFVc9VYnc+pmlfVWDfuRZXOnj9x41509vOJaXtapXOdO9enc7+m3YcnTuqpqnnauZhW87R9PzFtDae946bdCdP2q4ovjQAAAERCIwAAAJHQCAAAQCQ0AgAAEAmNAAAAREIjAAAAkdAIAABAJDQCAAAQCY0AAABEQiMAAACR0AgAAED0ebqAP7HW+vY3e++GSv7PtHp+sqq9OHlOlZ/cG1V7MW1Pq3SuT+cadu7pTz5fnevT2T/T7o2qNZw2VpXOHqty4zrfuKdVptXzVr40AgAAEAmNAAAAREIjAAAAkdAIAABAJDQCAAAQCY0AAABEQiMAAACR0AgAAEAkNAIAABAJjQAAAERCIwAAANHaez9dw2PWWk+XcL2T/rlxnTvPRdX6VNV8435N03kuOvf9xh6bVvO03rhxrGneegan/T+cVvNb9+ut57TKtHu1ky+NAAAAREIjAAAAkdAIAABAJDQCAAAQCY0AAABEQiMAAACR0AgAAEAkNAIAABAJjQAAAERCIwAAAJHQCAAAQPR5uoB/Za3VNtbeu22sk3md1FP1nCqdNZ8858Z1vrHnp/Vh1Rp29s+JaevcOdZbvXW/3nreO3XWc+NdV+XGe6xqfab9/znRWc+NvXHCl0YAAAAioREAAIBIaAQAACASGgEAAIiERgAAACKhEQAAgEhoBAAAIBIaAQAAiIRGAAAAIqERAACASGgEAAAg+jxdwJ9Ya5U8Z+/dNtbJc07quVHVOneuz417UVVzZ89X6eyfznW+8exMq6dK1V68dd87TZv7tLt32h01zbT96nTjfk3rw598h/vSCAAAQCQ0AgAAEAmNAAAAREIjAAAAkdAIAABAJDQCAAAQCY0AAABEQiMAAACR0AgAAEAkNAIAABAJjQAAAESfpwv4aq317W/23iXP6XRSc5XONezci6p6qkxbnxMn9VStYefcp+37tLGm3QmdfvLcT0y7o050rvO0sab14U/ujSpV+z7tv8SNY52YVk8nXxoBAACIhEYAAAAioREAAIBIaAQAACASGgEAAIiERgAAACKhEQAAgEhoBAAAIBIaAQAAiIRGAAAAIqERAACAaO29n67hP9ZaJc85mVfVWG/V2Rsne1FVT2eP/WRvPV837nvnXlTdvdPu8Gn77l3Z48Z+nvbu7vTWuU+7f05M640T/mf+mi+NAAAAREIjAAAAkdAIAABAJDQCAAAQCY0AAABEQiMAAACR0AgAAEAkNAIAABAJjQAAAERCIwAAAJHQCAAAQLT23k/X8B9rrbaxquZ+UnPnOk9bQ+vza531nHjrndB53qvcuBfT7tXO55x4ax9O268T0+7et5rWP9O8dV7T3Hj/TPsP4EsjAAAAkdAIAABAJDQCAAAQCY0AAABEQiMAAACR0AgAAEAkNAIAABAJjQAAAERCIwAAAJHQCAAAQCQ0AgAAEK2999M1/Mda6+kS/qNqfU7mZaweN9ZcZdr5mmbauajar7eOdeLGPZ12/0yredpe/OR37o31VHHX3fWcE9P+I017F/jSCAAAQCQ0AgAAEAmNAAAAREIjAAAAkdAIAABAJDQCAAAQCY0AAABEQiMAAACR0AgAAEAkNAIAABAJjQAAAESfpwv4au/97W/WWj92rJPnTFO1hidO1qdqDTvnVWVaz3ea1oedz+mc+43rPM20M9j5/up8zonO9/K0d8qN9XTuxY09X/Uf6cb/q9P6Z9r6nPClEQAAgEhoBAAAIBIaAQAAiIRGAAAAIqERAACASGgEAAAgEhoBAACIhEYAAAAioREAAIBIaAQAACASGgEAAIjW3vvpGv6JtVbJc6rW56SeG/di2jqfqNqLzj39yf0zbS+qdM79rW7cU35t2nnvfMf95PdplWn7NW3unfOa1s+d9/ON/XPCl0YAAAAioREAAIBIaAQAACASGgEAAIiE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AIiERgAAACKhEQAAgEhoBAAAIBIaAQAAiIRGAAAAIqERAACASGgEAAAgEhoBAACIhEYAAAAioREAAIBo7b2fruGfWGt9+5uquZ+MdWJaPSdOau5cn865V+k8gzeuT5Ubz9eJaXd4591bZdodNa1XzavnOSfeuhc3mtY/03rjxLT/q1WmrXMVXxoBAACIhEYAAAAioREAAIBIaAQAACASGgEAAIiERgAAACKhEQAAgEhoBAAAIBIaAQAAiIRGAAAAIqERAACA6PN0AV+ttb79zd675DedTuqpmvuJqnpOftOpal5Vqvar81x09mHVWFV7WvWcznWetoY39kbnfejd9PemrWGVt951J258L3eadk7f+l+9sw+n3asnfGkEAAAgEhoBAACIhEYAAAAioREAAIBIaAQAACASGgEAAIiERgAAACKhEQAAgEhoBAAAIBIaAQAAiIRGAAAAorX3frqG/1hrlTznZF4nY1U958SNY1X1T+e8Try1N6bVfGLavOjR+W7q7I1p79wq087Xjes87Z1741gnbqxnmmnnq/N/wrS5d/KlEQAAgEhoBAAAIBIaAQAAiIRGAAAAIqERAACASGgEAAAgEhoBAACIhEYAAAAioREAAIBIaAQAACASGgEAAIg+TxfwJ/bebc9Za71yrBtVrWHV+lTt17Sxqkzbi85z0blf0+6Wqr3o3NO3zuvEW98709b5Rm+9N05M658b7/mqsaY9Z1pvdPKlEQAAgEhoBAAAIBIaAQAAiIRGAAAAIqERAACASGgEAAAgEhoBAACIhEYAAAAioREAAIBIaAQAACASGgEAAIjW3vvpGn7bWuvpEv7jZA2raq7ar841rFqfab06rebOHruxf6rGOnFjb0w7pzeu4Ylpd/i0fb9R5/l6q2nnosq0O+qt9Uzb9yrT7lVfGgEAAIiERgAAACKhEQAAgEhoBAAAIBIaAQAAiIRGAAAAIqERAACASGgEAAAgEhoBAACIhEYAAAAioREAAIDo83QBX621ni7hn9h7f/ubzrlX1XPynBNVz/nJa3hiWs03nveq9ZnWq9N0ruHJWJ1rOO0MThtr2r1a5a3rfOM9f+LGuU+7MzvrmXbX3ciXRgAAACKhEQAAgEhoBAAAIBIaAQAAiIRGAAAAIqERAACASGgEAAAgEhoBAACIhEYAAAAioREAAIBIaAQAACBae++n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"
+          alt="Full Screen Contact QR Code"
+          class="w-64 h-64 object-contain mx-auto"
+        />
+      </div>
+      <p class="text-xs text-slate-500 mt-3" data-i18n="modalTip">掃描此二維碼即可儲存聯絡資料</p>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 hidden px-4 py-2.5 rounded-full bg-slate-900 text-white text-xs font-medium shadow-lg">
+    已複製到剪貼簿
+  </div>
+
+  <script>
+    const i18n = {
+      zh: {
+        subsidiary: '有利集團全資附屬公司 · Yau Lee Holdings Limited',
+        roleTitle: '高級經理 · Senior Manager',
+        hkecaBadge: '兼任：香港電器工程商會 理事 (2025–2027)',
+        saveVcf: '儲存聯絡人 (.vcf)',
+        enlargeQr: '放大二維碼',
+        scanPrompt: '請用手機相機掃描儲存聯絡資料',
+        tabContact: '聯絡資料',
+        tabCompany: '關於盈電工程',
+        tabHkeca: '商會職務',
+        lblMobile: '手提電話 Mobile',
+        lblDirect: '直線電話 Direct',
+        lblOffice: '公司總機 Tel',
+        lblFax: '傳真 Fax',
+        lblEmail: '電郵 Email',
+        lblWeb: '公司網站 Website',
+        lblAddress: '辦事處地址 Office Address',
+        compHeading: '盈電工程有限公司 (REC Engineering Company Limited)',
+        compDesc: '香港最大型機電工程公司之一，擁有超過 55 年專業經驗，專注環保、電氣及機械工程項目，業務涵蓋香港、澳門及中國內地，服務包括鐵路系統、醫院、酒店及發電廠等大型基建。',
+        statYears: '年卓越經驗',
+        statProj: '已完成項目',
+        statStaff: '專業團隊員工',
+        servicesTitle: '核心工程服務範疇',
+        visitRec: '瀏覽公司官方網站 www.rec-eng.com',
+        hkecaSub: '商會職務 · Association Role',
+        hkecaRole: '理事 · Executive Committee Member (2025–2027)',
+        hkecaAddrLbl: '商會地址 Address',
+        modalTip: '掃描此二維碼即可儲存聯絡資料',
+        copied: '已複製到剪貼簿'
+      },
+      en: {
+        subsidiary: 'Wholly-owned subsidiary of Yau Lee Holdings Limited',
+        roleTitle: 'Senior Manager · 高級經理',
+        hkecaBadge: 'Also: Executive Committee Member, HKECA (2025–2027)',
+        saveVcf: 'Save Contact (.vcf)',
+        enlargeQr: 'Enlarge QR Code',
+        scanPrompt: 'Scan with your phone camera to save contact',
+        tabContact: 'Contact Info',
+        tabCompany: 'About REC',
+        tabHkeca: 'HKECA Role',
+        lblMobile: 'Mobile',
+        lblDirect: 'Direct Line',
+        lblOffice: 'Office Tel',
+        lblFax: 'Fax',
+        lblEmail: 'Email',
+        lblWeb: 'Website',
+        lblAddress: 'Office Address',
+        compHeading: 'REC Engineering Company Limited',
+        compDesc: 'One of Hong Kong’s largest E&M engineering companies with over 55 years of excellence across Hong Kong, Macau, and Mainland China, delivering complex projects for railways, hospitals, hotels, and power plants.',
+        statYears: 'Years of Excellence',
+        statProj: 'Completed Projects',
+        statStaff: 'Employees',
+        servicesTitle: 'Core Engineering Services',
+        visitRec: 'Visit Official Website www.rec-eng.com',
+        hkecaSub: 'Association Role',
+        hkecaRole: 'Executive Committee Member (2025–2027)',
+        hkecaAddrLbl: 'Association Address',
+        modalTip: 'Scan this QR code to save contact information',
+        copied: 'Copied to clipboard'
+      }
+    };
+
+    let currentLang = 'zh';
+    let toastTimer = null;
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.remove('hidden');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 2200);
+    }
+
+    function applyLanguage(lang) {
+      currentLang = lang;
+      const dict = i18n[lang];
+      document.querySelectorAll('[data-i18n]').forEach((el) => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) el.textContent = dict[key];
+      });
+    }
+
+    document.getElementById('langToggle').addEventListener('click', () => {
+      applyLanguage(currentLang === 'zh' ? 'en' : 'zh');
+    });
+
+    // Tabs
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+    tabBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const target = btn.getAttribute('data-tab');
+        tabBtns.forEach((b) => {
+          b.classList.remove('border-rec-burgundy', 'text-rec-burgundy');
+          b.classList.add('border-transparent', 'text-slate-500');
+        });
+        btn.classList.add('border-rec-burgundy', 'text-rec-burgundy');
+        btn.classList.remove('border-transparent', 'text-slate-500');
+
+        tabPanels.forEach((p) => p.classList.add('hidden'));
+        document.getElementById('panel-' + target).classList.remove('hidden');
+      });
+    });
+
+    // Copy buttons
+    document.querySelectorAll('.copy-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const text = btn.getAttribute('data-copy');
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(() => {
+            showToast(i18n[currentLang].copied);
+          }).catch(() => fallbackCopy(text));
+        } else {
+          fallbackCopy(text);
+        }
+      });
+    });
+
+    function fallbackCopy(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showToast(i18n[currentLang].copied);
+      } catch (e) {}
+      document.body.removeChild(ta);
+    }
+
+    // Download vCard (.vcf)
+    document.getElementById('downloadVcfBtn').addEventListener('click', () => {
+      const vcard = [
+        'BEGIN:VCARD',
+        'VERSION:3.0',
+        'N:Yeung;Steve;T. M.;;',
+        'FN:Steve T. M. Yeung (楊達文)',
+        'ORG:REC Engineering Company Limited (盈電工程有限公司)',
+        'TITLE:Senior Manager (高級經理)',
+        'TEL;TYPE=CELL:+85293613787',
+        'TEL;TYPE=WORK:+85226198357',
+        'TEL;TYPE=WORK,MAIN:+85226198888',
+        'TEL;TYPE=FAX:+85224810623',
+        'EMAIL:steveyeung@rec-eng.com',
+        'URL:https://www.rec-eng.com',
+        'ADR;TYPE=WORK:;;Units A-D, 15/F, Goodman Kwai Chung Logistics Centre, 585-609 Castle Peak Road;Kwai Chung;New Territories;;Hong Kong',
+        'NOTE:BEng, MSc (Const. Law) | HKECA Executive Committee Member (2025-2027) | Tel:+85225720843 | adm@hkeca.org | www.hkeca.org',
+        'END:VCARD'
+      ].join('\r\n');
+
+      const blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Steve_Yeung_REC.vcf';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+
+    // QR Modal
+    const qrModal = document.getElementById('qrModal');
+    document.getElementById('enlargeQrBtn').addEventListener('click', () => {
+      qrModal.classList.remove('hidden');
+      qrModal.classList.add('flex');
+    });
+    document.getElementById('closeModalBtn').addEventListener('click', () => {
+      qrModal.classList.add('hidden');
+      qrModal.classList.remove('flex');
+    });
+    qrModal.addEventListener('click', (e) => {
+      if (e.target === qrModal) {
+        qrModal.classList.add('hidden');
+        qrModal.classList.remove('flex');
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+    });
+  </script>
+</body>
+</html>
